@@ -6,9 +6,6 @@ import hashlib
 import os
 import threading
 
-# ════════════════════════════════════════
-#  RENK PALETİ
-# ════════════════════════════════════════
 BG        = "#0d0d0f"
 PANEL     = "#16161a"
 CARD      = "#1e1e24"
@@ -27,9 +24,7 @@ FONT_BODY = ("Segoe UI", 10)
 FONT_BTN  = ("Segoe UI", 10, "bold")
 FONT_MONO = ("Consolas", 9)
 
-# ════════════════════════════════════════
-#  KRİPTO FONKSİYONLARI
-# ════════════════════════════════════════
+
 def generate_key(password: str) -> bytes:
     digest = hashlib.sha256(password.encode()).digest()
     return base64.urlsafe_b64encode(digest)
@@ -64,9 +59,7 @@ def decrypt_file(file_path: str, password: str) -> tuple[bool, str]:
     except Exception as e:
         return False, str(e)
 
-# ════════════════════════════════════════
-#  UYGULAMA
-# ════════════════════════════════════════
+
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -77,9 +70,9 @@ class App(tk.Tk):
         self.selected_files: list[str] = []
         self._build()
 
-    # ── ARAYÜZ İNŞA ──────────────────────
+
     def _build(self):
-        # ── Başlık ──────────────────────────
+   
         header = tk.Frame(self, bg=BG)
         header.pack(fill="x", padx=30, pady=(26, 0))
 
@@ -95,10 +88,10 @@ class App(tk.Tk):
         tk.Label(title_box, text="AzzSec Şifreleme Aracı",
                  font=FONT_SUB, bg=BG, fg=SUBTEXT).pack(anchor="w")
 
-        # ── Ayırıcı ─────────────────────────
+
         self._sep()
 
-        # ── Parola Bölümü ───────────────────
+     
         self._section("Parola")
         pw_frame = tk.Frame(self, bg=CARD, bd=0, highlightthickness=1,
                             highlightbackground=BORDER)
@@ -117,14 +110,13 @@ class App(tk.Tk):
         )
         self.pw_entry.pack(fill="x", padx=14, pady=(0, 10))
 
-        # Göster/Gizle butonu
+   
         self.show_pw = False
         self.eye_btn = tk.Label(pw_frame, text="👁", font=("Segoe UI Emoji", 14),
                                 bg=CARD, fg=SUBTEXT, cursor="hand2")
         self.eye_btn.pack(side="right", padx=14)
         self.eye_btn.bind("<Button-1>", self._toggle_pw)
 
-        # ── Dosya Listesi ───────────────────
         self._section("Seçili Dosyalar")
 
         list_container = tk.Frame(self, bg=CARD, bd=0,
@@ -132,7 +124,7 @@ class App(tk.Tk):
                                   highlightbackground=BORDER)
         list_container.pack(fill="both", expand=True, padx=30, pady=(4, 0))
 
-        # Kaydırma çubuğu
+
         scrollbar = tk.Scrollbar(list_container, bg=CARD, troughcolor=CARD,
                                  activebackground=ACCENT, relief="flat", width=8)
         scrollbar.pack(side="right", fill="y", pady=4)
@@ -156,7 +148,7 @@ class App(tk.Tk):
         )
         self.placeholder.place(relx=0.5, rely=0.5, anchor="center")
 
-        # Dosya işlem butonları
+    
         btn_row = tk.Frame(self, bg=BG)
         btn_row.pack(fill="x", padx=30, pady=(8, 0))
 
@@ -166,7 +158,7 @@ class App(tk.Tk):
         self._small_btn(btn_row, "⊘ Tümünü Temizle",
                         self._clear_files, SUBTEXT).pack(side="right")
 
-        # ── Log Alanı ───────────────────────
+    
         self._section("İşlem Günlüğü")
         log_frame = tk.Frame(self, bg=ENTRY_BG, bd=0,
                              highlightthickness=1, highlightbackground=BORDER)
@@ -183,7 +175,6 @@ class App(tk.Tk):
         self.log_text.tag_config("err", foreground=ERROR)
         self.log_text.tag_config("inf", foreground=SUBTEXT)
 
-        # ── Ana Butonlar ────────────────────
         self._sep(pady=14)
         action_frame = tk.Frame(self, bg=BG)
         action_frame.pack(fill="x", padx=30, pady=(0, 24))
@@ -198,7 +189,6 @@ class App(tk.Tk):
             "#2a2a35", TEXT
         ).pack(side="left", expand=True, fill="x")
 
-    # ── YARDIMCI WIDGET FONKSİYONLARI ────
     def _sep(self, pady=10):
         f = tk.Frame(self, height=1, bg=BORDER)
         f.pack(fill="x", padx=30, pady=pady)
@@ -228,7 +218,6 @@ class App(tk.Tk):
         btn.bind("<Leave>",    lambda e: btn.config(bg=bg_color))
         return btn
 
-    # ── OLAY FONKSİYONLARI ───────────────
     def _toggle_pw(self, _=None):
         self.show_pw = not self.show_pw
         self.pw_entry.config(show="" if self.show_pw else "●")
@@ -271,7 +260,6 @@ class App(tk.Tk):
         self.log_text.delete("1.0", tk.END)
         self.log_text.config(state="disabled")
 
-    # ── ŞİFRELEME / ÇÖZME ────────────────
     def _validate(self) -> str | None:
         password = self.pw_var.get().strip()
         if not password:
@@ -331,7 +319,6 @@ class App(tk.Tk):
         threading.Thread(target=worker, daemon=True).start()
 
 
-# ════════════════════════════════════════
 if __name__ == "__main__":
     app = App()
     app.mainloop()
